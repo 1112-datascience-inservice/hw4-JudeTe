@@ -15,10 +15,8 @@ ui <- fluidPage(
     tabPanel("PCA",
       # Sidebar layout with a input and output definitions ----
       sidebarLayout(
-
         # Sidebar panel for inputs ----
         sidebarPanel(
-
           # Input: Selector for choosing dataset ----
           selectInput(inputId = "first_pc_axis",
                       label = "First PC axis:",
@@ -31,22 +29,11 @@ ui <- fluidPage(
           #              label = "Number of observations to view:",
           #              value = 10)
         ),
-
         # Main panel for displaying outputs ----
         mainPanel(
           plotOutput("pcaplot"),
-          # # Output: Tabset w/ plot, summary, and table ----
-          # tabsetPanel(type = "tabs",
-          #             tabPanel("PCA", plotOutput("pcaplot")),
-          #             tabPanel("CA", verbatimTextOutput("pcaplot")))
-          #             # tabPanel("Table", tableOutput("table"))
-
-          # Output: Verbatim text for data summary ----
-          # verbatimTextOutput("summary"),
-
           # Output: HTML table with requested number of observations ----
           # tableOutput("view")
-
         )
       )
     ),
@@ -61,14 +48,18 @@ ui <- fluidPage(
                 plotOutput("caplot"),
                )
              )
+    ),
+    tabPanel("Raw Data",
+      HTML("<h4>Summery of raw data:</h4>"),
+      mainPanel(
+        verbatimTextOutput("summary")
+      )
     )
-    
   )
 )
 
 # Define server logic to summarize and view selected dataset ----
 server <- function(input, output) {
-
   #PCA Plot
   output$pcaplot <- renderPlot({
     first_pc_var <- input$first_pc_axis
@@ -95,7 +86,6 @@ server <- function(input, output) {
     } else {
       second_pc_axis <- 1
     }
-    # ggplot(...) + ...
     data(iris)
     # log transform 
     log.ir <- log(iris[, 1:4])
@@ -103,7 +93,6 @@ server <- function(input, output) {
     # apply PCA - scale. = TRUE is highly advisable, but default is FALSE. 
     ir.pca <- prcomp(log.ir,center = TRUE, scale. = TRUE)
     ggbiplot(ir.pca, choices=c(first_pc_axis, second_pc_axis), obs.scale = 1, var.scale = 1, groups = ir.species) + scale_color_discrete(name = '') + theme(legend.direction = 'horizontal', legend.position = 'top')
-    #print(g)
   })
   # CA Plot (Correspondence analysis plot)
   output$caplot <- renderPlot({
@@ -121,6 +110,11 @@ server <- function(input, output) {
     fviz_ca_biplot(res.ca, repel = TRUE)
   })
 
+  # Generate a summary of the data ----
+  output$summary <- renderPrint({
+    summary(iris)
+  })
+
   # Return the requested dataset ----
   # datasetInput <- reactive({
   #   switch(input$first_pc_axis,
@@ -131,16 +125,15 @@ server <- function(input, output) {
   # })
 
   # Generate a summary of the dataset ----
-  output$summary <- renderPrint({
-    dataset <- datasetInput()
-    summary(dataset)
-  })
+  # output$summary <- renderPrint({
+  #   dataset <- datasetInput()
+  #   summary(dataset)
+  # })
 
   # Show the first "n" observations ----
   # output$view <- renderTable({
   #   head(datasetInput(), n = 150)
   # })
-
 }
 
 

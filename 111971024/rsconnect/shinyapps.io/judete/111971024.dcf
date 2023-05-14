@@ -1,0 +1,14 @@
+name: 111971024
+title: 111971024
+username:
+account: judete
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9065007
+bundleId: 7193814
+url: https://judete.shinyapps.io/111971024/
+when: 1683633689.25701
+lastSyncTime: 1683633689.25702
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: App_original.R

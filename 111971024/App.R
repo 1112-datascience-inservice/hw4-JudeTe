@@ -9,7 +9,7 @@ library("factoextra")
 ui <- fluidPage(
 
   # App title ----
-  titlePanel("胡元亨的PCA & CA作業"),
+  titlePanel("HW4 - PCA & CA"),
 
   tabsetPanel(
     tabPanel("PCA",
